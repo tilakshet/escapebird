@@ -8,3 +8,12 @@ services:
     ports:
       - "8081:80"
     restart: unless-stopped
+    networks:
+      - default
+      - exchlotus-edge
+
+networks:
+  default:
+  exchlotus-edge:
+    external: true
+    name: exchlotus-prod_default
