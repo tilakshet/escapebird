@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to VPS
+      - name: Deploy website to Hostinger VPS
         uses: appleboy/ssh-action@v1.2.0
         env:
           DEPLOY_PATH: /home/deploy_exchlotus/escapebird
@@ -38,25 +38,36 @@ jobs:
 
             cd "$DEPLOY_PATH"
 
-            echo "===== UPDATING CODE ====="
+            echo "===== UPDATE SOURCE CODE ====="
             git fetch origin main
             git reset --hard origin/main
 
-            echo "===== VALIDATING DOCKER CONFIG ====="
-            docker compose -p escapebird config -q
+            echo "===== VALIDATE DOCKER CONFIGURATION ====="
+            docker compose -p escapebird -f compose.yml config -q
 
-            echo "===== BUILDING AND DEPLOYING WEBSITE ====="
-            docker compose -p escapebird up -d --build --no-deps escapebird-web
+            echo "===== CHECK SHARED NETWORK ====="
+            docker network inspect exchlotus-prod_default >/dev/null
 
-            echo "===== VERIFYING DOCKER NETWORK ====="
-            docker network connect exchlotus-prod_default escapebird-web 2>/dev/null || true
-            docker inspect escapebird-web --format '{{json .NetworkSettings.Networks}}'
+            echo "===== BUILD AND DEPLOY WEBSITE ====="
+            docker compose -p escapebird -f compose.yml \
+              up -d --build --no-deps rndhousehold-web
 
-            echo "===== CHECKING RND HOUSEHOLD ====="
-            curl --fail --silent --show-error --retry 5 --retry-delay 3 \
-              --retry-connrefused -o /dev/null https://rndhousehold.shop/
+            echo "===== VERIFY WEBSITE CONTAINER ====="
+            docker inspect rndhousehold-web \
+              --format '{{.State.Status}}'
 
-            curl --fail --silent --show-error --retry 5 --retry-delay 3 \
-              --retry-connrefused -o /dev/null https://www.rndhousehold.shop/
+            echo "===== VERIFY HTTPS ====="
+            curl --fail --silent --show-error \
+              --retry 5 --retry-delay 3 --retry-connrefused \
+              -o /dev/null https://rndhousehold.shop/
 
-            echo "SUCCESS: RND Household deployment and HTTPS checks passed."
+            curl --fail --silent --show-error \
+              --retry 5 --retry-delay 3 --retry-connrefused \
+              -o /dev/null https://www.rndhousehold.shop/
+
+            echo "===== VERIFY EXCHLOTUS ====="
+            curl --fail --silent --show-error \
+              --retry 5 --retry-delay 3 --retry-connrefused \
+              -o /dev/null https://exchlotus.com/
+
+            echo "SUCCESS: Deployment and website checks passed."
