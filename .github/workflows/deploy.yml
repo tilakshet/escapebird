@@ -1,5 +1,5 @@
 
-name: Deploy EscapeBird
+name: Deploy RND Household
 
 on:
   push:
@@ -11,17 +11,19 @@ permissions:
   contents: read
 
 concurrency:
-  group: escapebird-production
+  group: rndhousehold-production
   cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Deploy to EscapeBird VPS
+      - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.2.0
         env:
           DEPLOY_PATH: /home/deploy_exchlotus/escapebird
+
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
@@ -30,13 +32,31 @@ jobs:
           fingerprint: ${{ secrets.DEPLOY_HOST_FINGERPRINT }}
           envs: DEPLOY_PATH
           script_stop: true
+
           script: |
             set -eu
+
             cd "$DEPLOY_PATH"
+
+            echo "===== UPDATING CODE ====="
             git fetch origin main
             git reset --hard origin/main
+
+            echo "===== VALIDATING DOCKER CONFIG ====="
             docker compose -p escapebird config -q
+
+            echo "===== BUILDING AND DEPLOYING WEBSITE ====="
             docker compose -p escapebird up -d --build --no-deps escapebird-web
+
+            echo "===== VERIFYING DOCKER NETWORK ====="
             docker network connect exchlotus-prod_default escapebird-web 2>/dev/null || true
             docker inspect escapebird-web --format '{{json .NetworkSettings.Networks}}'
-            curl -fsS -o /dev/null https://escapebird.site/
+
+            echo "===== CHECKING RND HOUSEHOLD ====="
+            curl --fail --silent --show-error --retry 5 --retry-delay 3 \
+              --retry-connrefused -o /dev/null https://rndhousehold.shop/
+
+            curl --fail --silent --show-error --retry 5 --retry-delay 3 \
+              --retry-connrefused -o /dev/null https://www.rndhousehold.shop/
+
+            echo "SUCCESS: RND Household deployment and HTTPS checks passed."
