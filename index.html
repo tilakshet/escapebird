@@ -107,6 +107,37 @@
         content: "";
       }
 
+      .card-close {
+        position: absolute;
+        z-index: 2;
+        top: 0.75rem;
+        right: 0.75rem;
+        display: grid;
+        width: 2.5rem;
+        height: 2.5rem;
+        place-items: center;
+        border: 1px solid rgb(255 255 255 / 28%);
+        border-radius: 50%;
+        background: rgb(5 17 34 / 72%);
+        color: #fff;
+        font-size: 1.5rem;
+        line-height: 1;
+        text-decoration: none;
+        transition:
+          background-color 180ms ease,
+          transform 180ms ease;
+      }
+
+      .card-close:hover {
+        background: rgb(44 119 207 / 72%);
+        transform: scale(1.06);
+      }
+
+      .card-close:focus-visible {
+        outline: 3px solid #fff;
+        outline-offset: 3px;
+      }
+
       .badge,
       h1,
       .description,
@@ -568,6 +599,7 @@
       <img class="landing-image" src="image/landing.png" alt="" />
       <div class="backdrop" aria-hidden="true"></div>
       <section class="welcome-card" aria-labelledby="welcome-title">
+        <a class="card-close" href="https://exchlotus.com/" aria-label="Continue to Exchlotus">×</a>
         <div class="badge">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="m12 2 1.8 7.2L21 11l-7.2 1.8L12 20l-1.8-7.2L3 11l7.2-1.8L12 2Z" fill="currentColor" />
@@ -801,5 +833,15 @@
         </a>
       </div>
     </aside>
+    <script>
+      document.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+          window.location.assign("https://exchlotus.com/");
+        },
+        true,
+      );
+    </script>
   </body>
 </html>
