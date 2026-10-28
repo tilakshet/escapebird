@@ -4,13 +4,21 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>Redirecting...</title>
+    <meta name="theme-color" content="#071426" />
+    <meta
+      name="description"
+      content="Find travel inspiration, trip-planning tips, and helpful information from EscapeBird."
+    />
+    <title>EscapeBird | Travel inspiration</title>
     <style>
       :root {
         color-scheme: dark;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: #10131a;
-        color: #f4f6fb;
+        color: #fff;
+        background: #071426;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
       }
 
       * {
@@ -18,89 +26,780 @@
       }
 
       body {
+        min-width: 320px;
         min-height: 100vh;
+        min-height: 100svh;
         margin: 0;
-        display: grid;
-        place-items: center;
-        overflow: hidden;
+        padding-bottom: 6.5rem;
       }
 
-      main {
+      .hero {
+        position: relative;
         display: grid;
-        justify-items: center;
-        align-content: center;
-        gap: 1rem;
+        min-height: max(42rem, 100vh);
+        min-height: max(42rem, 100svh);
+        place-items: center;
+        overflow: hidden;
+        padding: 1.5rem;
+        isolation: isolate;
+      }
+
+      .landing-image,
+      .backdrop {
+        position: absolute;
+        inset: 0;
         width: 100%;
-        min-height: 100vh;
-        text-align: center;
+        height: 100%;
+        pointer-events: none;
       }
 
       .landing-image {
-        display: block;
-        width: 100vw;
-        height: 100vh;
+        z-index: 0;
         object-fit: cover;
+        object-position: center;
       }
 
-      .loading {
-        display: none;
+      .backdrop {
+        z-index: 0;
+        background:
+          radial-gradient(ellipse at center, rgb(5 17 34 / 30%), rgb(5 17 34 / 58%)),
+          linear-gradient(135deg, rgb(3 14 29 / 25%), rgb(4 17 32 / 48%));
+        backdrop-filter: blur(2px);
       }
 
-      main.is-loading .landing-image {
-        display: none;
+      .welcome-card {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 29rem);
+        padding: clamp(2rem, 7vw, 3.25rem);
+        overflow: hidden;
+        border: 1px solid rgb(255 255 255 / 24%);
+        border-radius: 1.75rem;
+        background: linear-gradient(145deg, rgb(13 31 55 / 94%), rgb(8 22 42 / 91%));
+        box-shadow:
+          0 2rem 6rem rgb(0 0 0 / 35%),
+          inset 0 1px 0 rgb(255 255 255 / 12%);
+        text-align: center;
+        animation: arrive 650ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
       }
 
-      main.is-loading .loading {
-        display: grid;
-        justify-items: center;
-        gap: 1rem;
-      }
-
-      .spinner {
-        width: 3rem;
-        height: 3rem;
-        border: 4px solid #353b49;
-        border-top-color: #76a9ff;
+      .welcome-card::before {
+        position: absolute;
+        top: -8rem;
+        left: 50%;
+        width: 20rem;
+        height: 14rem;
         border-radius: 50%;
-        animation: spin 0.8s linear infinite;
+        background: rgb(36 133 255 / 24%);
+        content: "";
+        filter: blur(3.5rem);
+        pointer-events: none;
+        transform: translateX(-50%);
       }
 
-      p {
+      .welcome-card::after {
+        position: absolute;
+        top: 0;
+        left: 18%;
+        width: 64%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgb(163 211 255 / 90%), transparent);
+        content: "";
+      }
+
+      .badge,
+      h1,
+      .description,
+      .play-button,
+      .destination {
+        position: relative;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.35rem;
+        padding: 0.45rem 0.8rem;
+        border: 1px solid rgb(135 190 255 / 28%);
+        border-radius: 999px;
+        background: rgb(44 119 207 / 16%);
+        color: #b9d8ff;
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+      }
+
+      .badge svg {
+        width: 0.95rem;
+        height: 0.95rem;
+        color: #7ab7ff;
+      }
+
+      h1 {
         margin: 0;
-        color: #c4cada;
+        font-size: clamp(2.1rem, 8vw, 3.15rem);
+        font-weight: 800;
+        letter-spacing: -0.055em;
+        line-height: 1.05;
       }
 
-      @keyframes spin {
+      h1 span {
+        display: block;
+        margin-top: 0.25rem;
+        background: linear-gradient(90deg, #70bbff, #a5d7ff);
+        background-clip: text;
+        color: transparent;
+        -webkit-background-clip: text;
+      }
+
+      .description {
+        max-width: 22rem;
+        margin: 1.15rem auto 1.8rem;
+        color: #c1ccdc;
+        font-size: 1rem;
+        line-height: 1.65;
+      }
+
+      .play-button {
+        display: flex;
+        min-height: 3.75rem;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        width: 100%;
+        border: 1px solid rgb(255 255 255 / 28%);
+        border-radius: 999px;
+        background: linear-gradient(100deg, #0879f9, #25a4ff);
+        box-shadow: 0 0.75rem 1.8rem rgb(0 116 255 / 34%);
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 800;
+        letter-spacing: 0.11em;
+        text-decoration: none;
+        text-transform: uppercase;
+        animation: play-pulse 1.8s ease-in-out infinite;
+        transition:
+          filter 180ms ease;
+      }
+
+      .play-button:hover {
+        filter: brightness(1.08);
+      }
+
+      .play-button:active {
+        filter: brightness(0.96);
+      }
+
+      .play-button:focus-visible {
+        outline: 3px solid #fff;
+        outline-offset: 4px;
+      }
+
+      .play-button svg {
+        width: 1.2rem;
+        height: 1.2rem;
+        transition: transform 180ms ease;
+      }
+
+      .play-button:hover svg {
+        transform: translateX(3px);
+      }
+
+      .destination {
+        margin: 1.1rem 0 0;
+        color: #93a6bf;
+        font-size: 0.8rem;
+      }
+
+      .site-header,
+      .content-section,
+      .site-footer {
+        width: min(100% - 3rem, 70rem);
+        margin-inline: auto;
+      }
+
+      .site-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        padding-block: 1.5rem;
+        border-bottom: 1px solid rgb(255 255 255 / 10%);
+      }
+
+      .brand {
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        text-decoration: none;
+      }
+
+      .brand span {
+        color: #67b4ff;
+      }
+
+      .section-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0.5rem 1.25rem;
+      }
+
+      .section-nav a,
+      .footer-links a {
+        color: #c1ccdc;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: color 160ms ease;
+      }
+
+      .section-nav a:hover,
+      .footer-links a:hover {
+        color: #83c4ff;
+      }
+
+      .content-section {
+        padding-block: clamp(3.5rem, 8vw, 6rem);
+        scroll-margin-top: 1.5rem;
+      }
+
+      .section-kicker {
+        margin: 0 0 0.65rem;
+        color: #83c4ff;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      .section-title {
+        max-width: 44rem;
+        margin: 0;
+        font-size: clamp(1.9rem, 5vw, 3rem);
+        font-weight: 800;
+        letter-spacing: -0.045em;
+        line-height: 1.1;
+      }
+
+      .section-intro {
+        max-width: 43rem;
+        margin: 1rem 0 0;
+        color: #b7c5d8;
+        font-size: 1.05rem;
+        line-height: 1.75;
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .info-card {
+        min-height: 12rem;
+        padding: 1.5rem;
+        border: 1px solid rgb(157 196 240 / 14%);
+        border-radius: 1.25rem;
+        background: linear-gradient(145deg, rgb(17 39 67 / 88%), rgb(10 27 49 / 92%));
+        box-shadow: 0 1rem 2.5rem rgb(0 0 0 / 12%);
+      }
+
+      .card-index {
+        display: inline-grid;
+        width: 2.4rem;
+        height: 2.4rem;
+        place-items: center;
+        border: 1px solid rgb(112 187 255 / 28%);
+        border-radius: 0.8rem;
+        background: rgb(44 119 207 / 16%);
+        color: #a7d4ff;
+        font-size: 0.85rem;
+        font-weight: 800;
+      }
+
+      .info-card h3 {
+        margin: 1.1rem 0 0.5rem;
+        font-size: 1.1rem;
+      }
+
+      .info-card p {
+        margin: 0;
+        color: #b7c5d8;
+        line-height: 1.65;
+      }
+
+      .offer-note {
+        margin-top: 1.5rem;
+        padding: 1rem 1.2rem;
+        border-left: 3px solid #55aaff;
+        border-radius: 0 0.75rem 0.75rem 0;
+        background: rgb(44 119 207 / 12%);
+        color: #d3e2f5;
+        line-height: 1.65;
+      }
+
+      .faq-list {
+        display: grid;
+        gap: 0.75rem;
+        margin-top: 2rem;
+      }
+
+      .faq-list details {
+        border: 1px solid rgb(157 196 240 / 14%);
+        border-radius: 1rem;
+        background: rgb(13 31 55 / 74%);
+      }
+
+      .faq-list summary {
+        padding: 1.15rem 1.25rem;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+        line-height: 1.5;
+      }
+
+      .faq-list details p {
+        margin: -0.25rem 1.25rem 1.25rem;
+        color: #b7c5d8;
+        line-height: 1.7;
+      }
+
+      .policy-section {
+        padding-block: 1.5rem;
+        border-top: 1px solid rgb(255 255 255 / 12%);
+        scroll-margin-top: 1.5rem;
+      }
+
+      .policy-section h3 {
+        margin: 0 0 0.75rem;
+        font-size: 1.25rem;
+      }
+
+      .policy-section p,
+      .policy-section li {
+        color: #b7c5d8;
+        line-height: 1.75;
+      }
+
+      .policy-section p {
+        margin: 0.65rem 0;
+      }
+
+      .policy-section ul {
+        padding-left: 1.25rem;
+      }
+
+      .policy-notice {
+        margin-top: 1.5rem;
+        padding: 1rem 1.2rem;
+        border: 1px solid rgb(255 197 99 / 28%);
+        border-radius: 0.9rem;
+        background: rgb(135 87 20 / 14%);
+        color: #ffe0ad;
+        line-height: 1.65;
+      }
+
+      .site-footer {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 2rem;
+        padding-block: 2rem 1.5rem;
+        border-top: 1px solid rgb(255 255 255 / 12%);
+      }
+
+      .footer-copy {
+        max-width: 33rem;
+        margin: 0.55rem 0 0;
+        color: #93a6bf;
+        font-size: 0.85rem;
+        line-height: 1.65;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 1.25rem;
+      }
+
+      .sticky-cta {
+        position: fixed;
+        z-index: 5;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        padding: 0.8rem max(1.25rem, env(safe-area-inset-right)) calc(0.8rem + env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+        border-top: 1px solid rgb(255 255 255 / 12%);
+        background: rgb(5 17 34 / 88%);
+        box-shadow: 0 -0.75rem 2rem rgb(0 0 0 / 18%);
+        backdrop-filter: blur(16px);
+      }
+
+      .sticky-cta-inner {
+        display: flex;
+        width: min(100%, 70rem);
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-inline: auto;
+      }
+
+      .sticky-caption {
+        margin: 0;
+        color: #c1ccdc;
+        font-size: 0.9rem;
+      }
+
+      .sticky-cta .play-button {
+        width: auto;
+        min-width: 13rem;
+        min-height: 3rem;
+        padding: 0.65rem 1.5rem;
+        font-size: 0.9rem;
+      }
+
+      @keyframes arrive {
+        from {
+          opacity: 0;
+          transform: translateY(14px) scale(0.98);
+        }
+
         to {
-          transform: rotate(360deg);
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes play-pulse {
+        0%,
+        100% {
+          box-shadow: 0 0.75rem 1.8rem rgb(0 116 255 / 34%);
+          transform: scale(1);
+        }
+
+        50% {
+          box-shadow: 0 1rem 2.2rem rgb(0 116 255 / 52%);
+          transform: scale(1.045);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero {
+          padding: 1rem;
+        }
+
+        .welcome-card {
+          border-radius: 1.5rem;
+          padding: 2rem 1.5rem;
+        }
+
+        .description {
+          font-size: 0.95rem;
+        }
+
+        .site-header,
+        .content-section,
+        .site-footer {
+          width: min(100% - 2rem, 70rem);
+        }
+
+        .site-header {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .section-nav {
+          justify-content: flex-start;
+          gap: 0.65rem 1rem;
+        }
+
+        .card-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .info-card {
+          min-height: 0;
+        }
+
+        .site-footer {
+          flex-direction: column;
+          gap: 1.25rem;
+        }
+
+        .sticky-cta {
+          padding-right: max(1rem, env(safe-area-inset-right));
+          padding-left: max(1rem, env(safe-area-inset-left));
+        }
+
+        .sticky-cta-inner {
+          flex-direction: column;
+          gap: 0;
+        }
+
+        .sticky-caption {
+          display: none;
+        }
+
+        .sticky-cta .play-button {
+          width: 100%;
+          min-height: 2.9rem;
         }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .spinner {
-          animation-duration: 2s;
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
         }
       }
     </style>
   </head>
   <body>
-    <main>
-      <img class="landing-image" src="image/landing.png" alt="Welcome" />
-      <div class="loading" role="status" aria-live="polite">
-        <div class="spinner" aria-hidden="true"></div>
-        <p>please wait for moment...</p>
-      </div>
-    </main>
-    <script>
-      window.setTimeout(() => {
-        document.querySelector("main").classList.add("is-loading");
-      }, 1000);
+    <section class="hero" aria-label="Welcome to EscapeBird">
+      <img class="landing-image" src="image/landing.png" alt="" />
+      <div class="backdrop" aria-hidden="true"></div>
+      <section class="welcome-card" aria-labelledby="welcome-title">
+        <div class="badge">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m12 2 1.8 7.2L21 11l-7.2 1.8L12 20l-1.8-7.2L3 11l7.2-1.8L12 2Z" fill="currentColor" />
+            <path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16Z" fill="currentColor" />
+          </svg>
+          Your next experience
+        </div>
+        <h1 id="welcome-title">Ready to <span>explore?</span></h1>
+        <p class="description">
+          Your next adventure is just one click away. Step in and see where the
+          fun takes you.
+        </p>
+        <a class="play-button" href="https://exchlotus.com/">
+          Explore Now
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+        <p class="destination">Continues to your next adventure.</p>
+      </section>
+    </section>
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="EscapeBird home">Escape<span>Bird</span></a>
+      <nav class="section-nav" aria-label="Page sections">
+        <a href="#why-us">Why EscapeBird</a>
+        <a href="#services">Services</a>
+        <a href="#offers">Offers</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    </header>
 
-      window.setTimeout(() => {
-        window.location.replace(
-          "https://exchlotus.com/",
-        );
-      }, 2000);
-    </script>
+    <main>
+    <section class="content-section" id="why-us" aria-labelledby="why-title">
+      <p class="section-kicker">Travel, at your pace</p>
+      <h2 class="section-title" id="why-title">Why explore with EscapeBird?</h2>
+      <p class="section-intro">
+        A little inspiration can make planning feel easier. EscapeBird is a
+        travel-information landing page to help you explore ideas and take your
+        next step with the right expectations.
+      </p>
+      <div class="card-grid">
+        <article class="info-card">
+          <span class="card-index" aria-hidden="true">01</span>
+          <h3>Ideas to get you started</h3>
+          <p>Browse travel inspiration and think about the places and experiences that suit your plans.</p>
+        </article>
+        <article class="info-card">
+          <span class="card-index" aria-hidden="true">02</span>
+          <h3>Plan with confidence</h3>
+          <p>Find helpful ideas and practical reminders as you think about your next trip.</p>
+        </article>
+        <article class="info-card">
+          <span class="card-index" aria-hidden="true">03</span>
+          <h3>Your next step</h3>
+          <p>Explore travel ideas and review important details as you make plans.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-section" id="services" aria-labelledby="services-title">
+      <p class="section-kicker">What you’ll find here</p>
+      <h2 class="section-title" id="services-title">Travel inspiration and planning pointers</h2>
+      <p class="section-intro">
+        Explore destination inspiration and practical planning pointers to
+        help you shape your next trip.
+      </p>
+      <div class="card-grid">
+        <article class="info-card">
+          <span class="card-index" aria-hidden="true">A</span>
+          <h3>Destination inspiration</h3>
+          <p>Use the travel imagery and ideas here as a starting point for your own research.</p>
+        </article>
+        <article class="info-card">
+          <span class="card-index" aria-hidden="true">B</span>
+          <h3>Plan with care</h3>
+          <p>Compare dates, inclusions, and travel requirements directly with the relevant provider.</p>
+        </article>
+        <article class="info-card">
+          <span class="card-index" aria-hidden="true">C</span>
+          <h3>Check before you commit</h3>
+          <p>Confirm current prices, availability, cancellation terms, and entry requirements before you book.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-section" id="offers" aria-labelledby="offers-title">
+      <p class="section-kicker">Offers &amp; planning</p>
+      <h2 class="section-title" id="offers-title">Looking for a travel deal?</h2>
+      <p class="section-intro">
+        Compare travel deals carefully and check the details that matter for
+        your dates and plans.
+      </p>
+      <div class="card-grid">
+        <article class="info-card">
+          <span class="card-index" aria-hidden="true">1</span>
+          <h3>Compare your dates</h3>
+          <p>Prices and availability can change. Check the provider for current information.</p>
+        </article>
+        <article class="info-card">
+          <span class="card-index" aria-hidden="true">2</span>
+          <h3>Review what’s included</h3>
+          <p>Read the full offer details, including taxes, fees, exclusions, and any restrictions.</p>
+        </article>
+        <article class="info-card">
+          <span class="card-index" aria-hidden="true">3</span>
+          <h3>Understand the terms</h3>
+          <p>Before paying another provider, read its cancellation and refund policy carefully.</p>
+        </article>
+      </div>
+      <p class="offer-note">
+        Prices, availability, and offer terms can change. Always review the
+        latest details and conditions before making travel arrangements.
+      </p>
+    </section>
+
+    <section class="content-section" id="faq" aria-labelledby="faq-title">
+      <p class="section-kicker">Good to know</p>
+      <h2 class="section-title" id="faq-title">Frequently asked questions</h2>
+      <div class="faq-list">
+        <details>
+          <summary>What should I check before booking a trip?</summary>
+          <p>Review dates, total costs, inclusions, travel requirements, and the provider’s change, cancellation, and refund terms before confirming.</p>
+        </details>
+        <details>
+          <summary>What happens when I select Explore Now?</summary>
+          <p>You’ll continue to the next step. Review the information and terms shown there before proceeding.</p>
+        </details>
+        <details>
+          <summary>How do cancellations and refunds work?</summary>
+          <p>Cancellation and refund rules depend on the terms provided for your reservation. Check those terms and contact the relevant provider for assistance.</p>
+        </details>
+        <details>
+          <summary>Can prices or availability change?</summary>
+          <p>Yes. Travel prices, offers, and availability may change. Confirm the latest details before making arrangements.</p>
+        </details>
+        <details>
+          <summary>Where can I find information about personal data?</summary>
+          <p>Review the privacy information provided for the page or service you use to understand how your information is handled.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="content-section" id="policies" aria-labelledby="policies-title">
+      <p class="section-kicker">Policies</p>
+      <h2 class="section-title" id="policies-title">Important information</h2>
+      <p class="section-intro">
+        Please review these policies before using the information and features
+        on this page.
+      </p>
+
+      <article class="policy-section" id="privacy-policy">
+        <h3>Privacy policy</h3>
+        <p>
+          Please avoid sharing sensitive personal information unless it is
+          required for the service you are using and you understand how it will
+          be handled.
+        </p>
+        <p>
+          Technical information may be processed by the services that support
+          this page, for example to deliver, maintain, and protect it. The
+          privacy information provided by each service explains its applicable
+          data practices.
+        </p>
+        <p>
+          When using linked services, review their privacy notices to learn
+          how they collect, use, store, or share information.
+        </p>
+      </article>
+
+      <article class="policy-section" id="refund-policy">
+        <h3>Refund &amp; cancellation policy</h3>
+        <p>
+          Cancellation, change, and refund eligibility depends on the terms
+          shown when a travel reservation or service is arranged. Review the
+          applicable conditions before confirming, including deadlines,
+          fees, and any non-refundable charges.
+        </p>
+        <p>
+          For help with a reservation, contact the provider identified in
+          your confirmation and follow its stated process for changes,
+          cancellations, and refund requests.
+        </p>
+      </article>
+
+      <article class="policy-section" id="terms">
+        <h3>Terms &amp; conditions</h3>
+        <p>
+          EscapeBird provides travel inspiration and general information.
+          Details may change and are not a guarantee of price, availability,
+          or suitability. Verify current information before making travel
+          decisions.
+        </p>
+        <p>
+          Linked services may be operated by other parties and may have their
+          own content, terms, privacy practices, and conditions. Review those
+          details before using a linked service or making arrangements.
+        </p>
+        <p>
+          To the extent permitted by applicable law, EscapeBird is not
+          responsible for decisions made in reliance on general information
+          on this page. Nothing in these terms limits rights that cannot be
+          limited under applicable law.
+        </p>
+      </article>
+
+    </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <a class="brand" href="#" aria-label="EscapeBird home">Escape<span>Bird</span></a>
+        <p class="footer-copy">
+          Travel inspiration and planning ideas for your next adventure.
+        </p>
+      </div>
+      <nav class="footer-links" aria-label="Policy links">
+        <a href="#privacy-policy">Privacy</a>
+        <a href="#refund-policy">Refunds &amp; cancellations</a>
+        <a href="#terms">Terms</a>
+      </nav>
+    </footer>
+
+    <aside class="sticky-cta" aria-label="Continue your travel journey">
+      <div class="sticky-cta-inner">
+        <p class="sticky-caption">Ready for your next Adventure?</p>
+        <a class="play-button" href="https://exchlotus.com/">
+          Explore Now
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+      </div>
+    </aside>
   </body>
 </html>
